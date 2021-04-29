@@ -154,6 +154,25 @@ func convertToRPN(tokens []string) ([]string, error) {
 				operators.push(token)
 				continue
 			}
+			// handle parenthesis
+			if token == "(" {
+				operators.push(token)
+				continue
+			}
+			if token == ")" {
+				prev := operators.pop()
+				for {
+					if prev == "(" || prev == "" {
+						break
+					}
+					rpn = append(rpn, prev)
+					prev = operators.pop()
+				}
+				if operators.peek() == "(" {
+					operators.pop()
+				}
+				continue
+			}
 
 			// check if previous operator takes precedence
 			prev := operators.peek()
